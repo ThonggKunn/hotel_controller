@@ -9,4 +9,5 @@ public class CreateHotelRequest {
 
     private String hotelName;
 
+    private Integer rate;
 }

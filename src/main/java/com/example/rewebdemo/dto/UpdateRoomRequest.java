@@ -3,9 +3,9 @@ package com.example.rewebdemo.dto;
 import lombok.Data;
 
 @Data
-public class DeleteHotelRequest {
+public class UpdateRoomRequest {
 
-    private String hotelName;
+    private String roomID;
 
     private boolean status;
 }
