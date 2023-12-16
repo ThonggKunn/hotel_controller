@@ -11,7 +11,5 @@ public class UpdateHotelRequest {
 
     private boolean status;
 
-    public void deleteHotel(String hotelName, boolean status) {
 
-    }
 }
