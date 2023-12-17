@@ -21,7 +21,7 @@ public class HotelController {
     @Autowired
     HotelService hotelService;
 
-    private Hotel findHotelbyID(String hotelID) {
+        private Hotel findHotelbyID(String hotelID) {
         for (Hotel hotel: hotels) {
             if (hotel.getHotelID().equals(hotelID)) {
                 return hotel;

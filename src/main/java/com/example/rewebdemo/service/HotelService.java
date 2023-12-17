@@ -23,7 +23,7 @@ public class HotelService {
     public Hotel createHotel(CreateHotelRequest request) {
         Hotel hotel = new Hotel();
         hotel.setHotelName(request.getHotelName());
-        hotel.setHotelID(request.getHotelID());
+        hotel.setRate(request.getRate());
 
         hotel = hotelRepository.save(hotel);
         return hotel;
@@ -35,6 +35,12 @@ public class HotelService {
 
     public Hotel updateHotel(Long hotelId, UpdateHotelRequest request) {
         Hotel hotel = hotelRepository.findByHotelId(hotelId);
+        if (hotel == null) {
+            return null;
+        }
+
+        hotel.setHotelName(request.getHotelName());
+        hotel = hotelRepository.save(hotel);
 
         return hotel;
     }

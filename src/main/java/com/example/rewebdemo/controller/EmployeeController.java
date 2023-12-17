@@ -5,6 +5,8 @@ import com.example.rewebdemo.dto.CreateEmployeeRequest;
 import com.example.rewebdemo.dto.Responsedto;
 import com.example.rewebdemo.dto.UpdateEmployeeRequest;
 import com.example.rewebdemo.dto.UpdateRoomRequest;
+import com.example.rewebdemo.service.EmployeeService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -15,6 +17,9 @@ import java.util.List;
 public class EmployeeController {
 
     private static List<Employee> employees = new ArrayList<Employee>();
+
+    @Autowired
+    EmployeeService employeeService;
 
     private Employee findEmployeeByID(String employeeID) {
         for (Employee employee : employees) {
@@ -28,65 +33,40 @@ public class EmployeeController {
     @PostMapping("/employees")
     public Employee createEmployee(@RequestBody CreateEmployeeRequest request) {
 
-        Employee employee = new Employee();
-
-        employee.setEmployeeID(request.getEmployeeID());
-        employee.setEmployeeName(request.getEmployeeName());
-        employee.setPosition(request.getPosition());
-
-        employees.add(employee);
-        return employee;
+        return employeeService.createEmployee(request);
 
     }
 
     @GetMapping("/employees")
     public List<Employee> getEmployee() {
-        return employees;
+        return employeeService.getAll();
     }
 
     @GetMapping("/employee/{employeeID}")
-    public Employee getEmployee(@PathVariable String employeeID) {
+    public Employee getEmployee(@PathVariable Long employeeID) {
 
-        for (Employee employee : employees) {
+        return employeeService.getEmployeeById(employeeID);
+    }
+
+    @PutMapping("/employee/{employeeID}")
+    public Employee updateEmployee(@PathVariable Long employeeID,
+                                   @RequestBody UpdateEmployeeRequest request) {
+
+        return employeeService.updateEmployee(employeeID, request);
+    }
+
+    @DeleteMapping("/employee/{employeeID}")
+    public Responsedto disableEmployee(@PathVariable Long employeeID) {
+        return employeeService.disableEmployee(employeeID);
+    }
+
+    private Employee findEmployeeById(String employeeID) {
+        for (Employee employee: employees) {
             if (employee.getEmployeeID().equals(employeeID)) {
                 return employee;
             }
         }
         return null;
-    }
-
-    @PutMapping("/employee/{employeeID}")
-    public Employee updateEmployee(@PathVariable String employeeID,
-                                   @RequestBody UpdateEmployeeRequest request) {
-
-        Employee employee = findEmployeeByID(employeeID);
-        if (employeeID == null) {
-            return null;
-        }
-
-        employee.setEmployeeName(request.getEmployeeName());
-//        employee.setEmployeeID(request.getEmployeeID());
-//        employee.setPosition(request.getPosition());
-        employee.setStatus(request.isStatus());
-
-        return employee;
-    }
-
-    @DeleteMapping("/employee/{employeeID}")
-    public Employee disableEmployee(@PathVariable String employeeID) {
-
-
-        if (employeeID == null) {
-            return null;
-        }
-
-        for (Employee employee : employees) {
-            if (employee.getEmployeeID().equals(employeeID)) {
-                employee.setStatus(false);
-            }
-        }
-        return null;
-
     }
 
 
