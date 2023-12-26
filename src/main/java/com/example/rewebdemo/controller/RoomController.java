@@ -5,6 +5,8 @@ import com.example.rewebdemo.Entity.Room;
 import com.example.rewebdemo.dto.CreateRoomRequest;
 import com.example.rewebdemo.dto.Responsedto;
 import com.example.rewebdemo.dto.UpdateRoomRequest;
+import com.example.rewebdemo.service.RoomService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -15,6 +17,8 @@ public class RoomController {
 
     private static List<Room> rooms = new ArrayList<Room>();
 
+    @Autowired
+    RoomService roomService;
     private Room findRoombyId(String roomID) {
         for (Room room: rooms) {
             if (room.getRoomID().equals(roomID)) {
@@ -26,67 +30,37 @@ public class RoomController {
 
     }
 
-    //tao Room
     @PostMapping("/room")
     public Room createRoom(@RequestBody CreateRoomRequest request) {
-        Room room = new Room();
-
-        room.setRoomID(request.getRoomId());
-        room.setRoomType(request.getRoomType());
-
-        rooms.add(room);
-
-        return room;
+        return roomService.createRoom(request);
     }
 
-    //lay danh sach
+
     @GetMapping("/rooms")
-    public static List<Room> getRoom() {
-        return rooms;
+    public List<Room> getRoom() {
+        return roomService.getAll();
     }
 
-    //lay 1 room
-    @GetMapping("/room/{roomID}")
-    public Room getRoom(@PathVariable String roomID) {
 
-        for (Room room : rooms) {
-            if (room.getRoomID().equals(roomID)) {
-                return room;
-            }
-        }
-        return null;
+    @GetMapping("/room/{roomID}")
+    public Room getRoom(@PathVariable Long roomID) {
+
+        return roomService.getRoomById(roomID);
     }
 
     @PutMapping("/room/{roomID}")
-    public Room updateRoom(@PathVariable String roomID,
+    public Room updateRoom(@PathVariable Long roomID,
                            @RequestBody UpdateRoomRequest request) {
 
-        Room room = findRoombyId(roomID);
-        if (roomID == null) {
-            return null;
-        }
-
-        room.setRoomID(request.getRoomID());
-        room.setStatus(request.isStatus());
-        return room;
+        return roomService.updateRoom(roomID, request);
     }
 
 
-    //xoa 1 phong
     @DeleteMapping("/room/de/{roomID}")
-    public Room deleteRoom(@PathVariable String roomID) {
-
-        if (roomID == null) {
-            return null;
-        }
-
-        for (Room room : rooms) {
-            if (room.getRoomID().equals(roomID)) {
-                room.setStatus(false);
-            }
-        }
-        return null;
+    public Responsedto disableRoom(@PathVariable Long roomID) {
+        return roomService.disableRoom(roomID);
     }
+
 
 
 }
